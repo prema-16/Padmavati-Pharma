@@ -1,7 +1,8 @@
 import axios from "axios";
 
-// Use Render backend URL in production, local proxy in development
-const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+// Production: Render backend | Development: local proxy
+const BASE_URL = import.meta.env.VITE_API_URL
+  || (import.meta.env.DEV ? "/api" : "https://padmavati-pharma.onrender.com/api");
 
 const api = axios.create({
   baseURL: BASE_URL,
