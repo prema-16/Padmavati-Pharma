@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -56,7 +57,7 @@ export default function AdminOrderDetail() {
                   {order.items.map(item=>(
                     <tr key={item._id} className="border-t border-gray-50">
                       <td className="px-4 py-3 flex items-center gap-2">
-                        {item.product?.image ? <img src={`/uploads/${item.product.image}`} className="w-9 h-9 object-cover rounded" alt="" /> : <div className="w-9 h-9 bg-gray-100 rounded" />}
+                        {item.product?.image ? <img src={imgUrl(item.product.image)} className="w-9 h-9 object-cover rounded" alt="" /> : <div className="w-9 h-9 bg-gray-100 rounded" />}
                         <span className="font-medium">{item.product?.name||"N/A"}</span>
                       </td>
                       <td className="px-4 py-3 text-center">{item.quantity}</td>

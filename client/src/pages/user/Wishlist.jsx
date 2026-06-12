@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaTrash, FaCartPlus } from "react-icons/fa";
@@ -31,7 +32,7 @@ export default function Wishlist() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
           {products.map((p) => (
             <div key={p._id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md transition-all">
-              <div className="h-40 overflow-hidden bg-gray-50">{p.image ? <img src={`/uploads/${p.image}`} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-4xl opacity-20">💊</div>}</div>
+              <div className="h-40 overflow-hidden bg-gray-50">{p.image ? <img src={imgUrl(p.image)} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-4xl opacity-20">💊</div>}</div>
               <div className="p-4">
                 <p className="text-primary text-xs font-bold uppercase mb-1">{p.category?.name}</p>
                 <h3 className="font-semibold text-sm truncate mb-1">{p.name}</h3>

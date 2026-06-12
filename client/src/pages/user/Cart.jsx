@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +46,7 @@ export default function Cart() {
                     <tr key={item._id} className="border-t border-gray-100 hover:bg-gray-50">
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          {item.product.image ? <img src={`/uploads/${item.product.image}`} alt="" className="w-14 h-14 object-cover rounded-lg border border-gray-100" /> : <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center text-xl">💊</div>}
+                          {item.product.image ? <img src={imgUrl(item.product.image)} alt="" className="w-14 h-14 object-cover rounded-lg border border-gray-100" /> : <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center text-xl">💊</div>}
                           <div>
                             <Link to={`/products/${item.product._id}`} className="font-semibold text-sm hover:text-primary">{item.product.name}</Link>
                             <p className="text-xs text-gray-400">{item.product.manufacturer}</p>

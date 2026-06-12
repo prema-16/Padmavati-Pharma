@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
@@ -49,7 +50,7 @@ export default function AdminProducts() {
                   <tr key={p._id} className="border-t border-gray-50 hover:bg-gray-50">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        {p.image ? <img src={`/uploads/${p.image}`} className="w-10 h-10 object-cover rounded-lg border border-gray-100" alt="" /> : <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-lg">💊</div>}
+                        {p.image ? <img src={imgUrl(p.image)} className="w-10 h-10 object-cover rounded-lg border border-gray-100" alt="" /> : <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-lg">💊</div>}
                         <div><p className="font-semibold">{p.name}</p><p className="text-xs text-gray-400">{p.manufacturer}</p></div>
                       </div>
                     </td>

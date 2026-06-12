@@ -1,3 +1,4 @@
+import { imgUrl } from "../services/imageHelper";
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,7 +53,7 @@ export default function Products() {
     dispatch(addToCart({ productId, quantity: 1 }));
   };
 
-  const imgSrc = (img) => img ? `/uploads/${img}` : null;
+  const imgSrc = (img) => img ? imgUrl(img) : null;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">

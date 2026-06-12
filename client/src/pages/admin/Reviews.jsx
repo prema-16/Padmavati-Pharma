@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { FaCheck, FaTrash, FaStar } from "react-icons/fa";
 import api from "../../services/api";
@@ -41,7 +42,7 @@ export default function AdminReviews() {
                 <tr key={r._id} className="border-t border-gray-50 hover:bg-gray-50">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
-                      {r.product?.image && <img src={`/uploads/${r.product.image}`} className="w-9 h-9 object-cover rounded" alt="" />}
+                      {r.product?.image && <img src={imgUrl(r.product.image)} className="w-9 h-9 object-cover rounded" alt="" />}
                       <span className="font-medium">{r.product?.name||"N/A"}</span>
                     </div>
                   </td>

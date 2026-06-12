@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -95,7 +96,7 @@ export default function Checkout() {
             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
               {items?.map((item) => item.product && (
                 <div key={item._id} className="flex items-center gap-3 py-2 border-b border-gray-50">
-                  {item.product.image ? <img src={`/uploads/${item.product.image}`} className="w-11 h-11 object-cover rounded-lg" alt="" /> : <div className="w-11 h-11 bg-gray-100 rounded-lg flex items-center justify-center">💊</div>}
+                  {item.product.image ? <img src={imgUrl(item.product.image)} className="w-11 h-11 object-cover rounded-lg" alt="" /> : <div className="w-11 h-11 bg-gray-100 rounded-lg flex items-center justify-center">💊</div>}
                   <div className="flex-1 min-w-0"><p className="text-xs font-medium truncate">{item.product.name}</p><p className="text-xs text-gray-400">× {item.quantity}</p></div>
                   <span className="text-sm font-bold text-primary">₹{(item.product.distributorPrice*item.quantity).toFixed(2)}</span>
                 </div>

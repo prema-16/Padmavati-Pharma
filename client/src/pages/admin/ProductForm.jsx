@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -33,7 +34,7 @@ export default function ProductForm() {
           stock: p.stock||"", minOrderQuantity: p.minOrderQuantity||"1",
           prescriptionRequired: p.prescriptionRequired||false, discount: p.discount||"0", isActive: p.isActive!==false,
         });
-        if (p.image) setPreview(`/uploads/${p.image}`);
+        if (p.image) setPreview(imgUrl(p.image));
       }).finally(() => setLoading(false));
     }
   }, [id]);

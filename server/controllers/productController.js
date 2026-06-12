@@ -52,7 +52,10 @@ exports.getProduct = async (req, res, next) => {
 exports.createProduct = async (req, res, next) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.image = req.file.filename;
+    if (req.file) {
+      // Cloudinary returns path (URL), local disk returns filename
+      data.image = req.file.path || req.file.filename;
+    }
     const product = await Product.create(data);
     await Category.findByIdAndUpdate(product.category, { $inc: { productCount: 1 } });
     res.status(201).json({ success: true, product });
@@ -63,7 +66,10 @@ exports.createProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.image = req.file.filename;
+    if (req.file) {
+      // Cloudinary returns path (URL), local disk returns filename
+      data.image = req.file.path || req.file.filename;
+    }
     const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true });
     if (!product) return res.status(404).json({ success: false, message: "Product not found" });
     res.json({ success: true, product });

@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
@@ -41,7 +42,7 @@ export default function Orders() {
               </div>
               <div className="flex gap-2 flex-wrap flex-1">
                 {order.items?.slice(0,4).map((item) => item.product && (
-                  item.product.image ? <img key={item._id} src={`/uploads/${item.product.image}`} className="w-10 h-10 object-cover rounded-lg border border-gray-100" title={item.product.name} alt="" /> : <div key={item._id} className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-sm">💊</div>
+                  item.product.image ? <img key={item._id} src={imgUrl(item.product.image)} className="w-10 h-10 object-cover rounded-lg border border-gray-100" title={item.product.name} alt="" /> : <div key={item._id} className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-sm">💊</div>
                 ))}
                 {(order.items?.length || 0) > 4 && <span className="text-xs text-gray-400 self-center">+{order.items.length-4} more</span>}
               </div>

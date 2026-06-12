@@ -1,3 +1,4 @@
+import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../../services/api";
@@ -83,7 +84,7 @@ export default function OrderDetail() {
                 {order.items.map((item) => (
                   <tr key={item._id} className="border-t border-gray-50">
                     <td className="px-5 py-4 flex items-center gap-3">
-                      {item.product?.image ? <img src={`/uploads/${item.product.image}`} className="w-10 h-10 object-cover rounded-lg" alt="" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg" />}
+                      {item.product?.image ? <img src={imgUrl(item.product.image)} className="w-10 h-10 object-cover rounded-lg" alt="" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg" />}
                       <span className="font-medium">{item.product?.name || "N/A"}</span>
                     </td>
                     <td className="px-5 py-4 text-center">{item.quantity}</td>
