@@ -21,7 +21,10 @@ const app = express();
 connectDB();
 
 // Security
-app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: false,
+}));
 app.use(mongoSanitize());
 
 // CORS
