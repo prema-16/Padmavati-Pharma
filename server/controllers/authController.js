@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
 
 // Helper: send token response
 const sendToken = (user, statusCode, res) => {
@@ -103,10 +104,49 @@ exports.forgotPassword = async (req, res, next) => {
 
     const token = crypto.randomBytes(32).toString("hex");
     user.resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
-    user.resetPasswordExpire = Date.now() + 3600000;
+    user.resetPasswordExpire = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    res.json({ success: true, message: "Password reset link sent to email", resetToken: token });
+    const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
+    const resetUrl = `${clientUrl}/reset-password/${token}`;
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: #1d4ed8; padding: 20px; border-radius: 12px 12px 0 0; text-align: center;">
+          <h1 style="color: white; margin: 0; font-size: 24px;">💊 Padmavati Pharma</h1>
+        </div>
+        <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb;">
+          <h2 style="color: #111827; margin-top: 0;">Reset Your Password</h2>
+          <p style="color: #6b7280;">Hi ${user.name},</p>
+          <p style="color: #6b7280;">We received a request to reset your password. Click the button below to set a new password. This link expires in <strong>1 hour</strong>.</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetUrl}" style="background: #1d4ed8; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">
+              Reset Password
+            </a>
+          </div>
+          <p style="color: #9ca3af; font-size: 13px;">If the button doesn't work, copy and paste this link into your browser:</p>
+          <p style="color: #6b7280; font-size: 13px; word-break: break-all;">${resetUrl}</p>
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
+          <p style="color: #9ca3af; font-size: 12px;">If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.</p>
+        </div>
+      </div>
+    `;
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "Password Reset Link — Padmavati Pharma",
+        html,
+      });
+      res.json({ success: true, message: "Password reset link has been sent to your email." });
+    } catch (emailErr) {
+      // Roll back token if email fails
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save();
+      console.error("Email send error:", emailErr.message);
+      return res.status(500).json({ success: false, message: "Email could not be sent. Please try again later." });
+    }
   } catch (err) {
     next(err);
   }

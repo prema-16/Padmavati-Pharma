@@ -1,5 +1,6 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import BottomNav from "./components/common/BottomNav";
@@ -15,6 +16,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 // Customer
 import Cart from "./pages/user/Cart";
@@ -34,6 +36,13 @@ import AdminOrderDetail from "./pages/admin/OrderDetail";
 import AdminUsers from "./pages/admin/Users";
 import AdminCategories from "./pages/admin/Categories";
 import AdminReviews from "./pages/admin/Reviews";
+
+// ── Scroll to top on every navigation ─────────────────────────
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
 
 // ── Layout wrapper (Navbar + Footer) ──────────────────────────
 function PublicLayout() {
@@ -64,11 +73,14 @@ function AdminRoute() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       {/* Auth pages — no Navbar/Footer */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* Admin pages — own sidebar layout, no public Navbar */}
       <Route element={<AdminRoute />}>
@@ -107,5 +119,6 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
+    </>
   );
 }
