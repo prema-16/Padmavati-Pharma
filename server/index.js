@@ -64,6 +64,15 @@ app.use("/api/reviews",    require("./routes/reviews"));
 app.use("/api/wishlist",   require("./routes/wishlist"));
 app.use("/api/admin",      require("./routes/admin"));
 
+// Root route — API info
+app.get("/", (req, res) => res.json({
+  success: true,
+  name: "Padmavati Pharma API",
+  version: "1.0.0",
+  status: "running",
+  docs: "/api/health",
+}));
+
 // Health check
 app.get("/api/health", (req, res) => res.json({ success: true, message: "Padmavati Pharma API running ✅" }));
 
