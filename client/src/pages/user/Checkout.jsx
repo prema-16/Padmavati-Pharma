@@ -20,7 +20,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { user } = useSelector((s) => s.auth);
   const { items, subtotal, gstAmount, total, loading } = useSelector((s) => s.cart);
-  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [paymentMethod] = useState("COD");
   const [placing, setPlacing] = useState(false);
   const [addr, setAddr] = useState({
     companyName: user?.companyName || "",
@@ -94,16 +94,24 @@ export default function Checkout() {
             Payment Method
           </h3>
           <div className="space-y-2.5">
-            {PAYMENT.map((p) => (
-              <label key={p.value} className={`flex items-center gap-3 p-3.5 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod===p.value?"border-primary bg-primary/5":"border-gray-200"}`}>
-                <input type="radio" name="payment" value={p.value} checked={paymentMethod===p.value} onChange={()=>setPaymentMethod(p.value)} className="accent-primary" />
-                <p.icon className={`text-xl ${p.color}`} />
-                <div>
-                  <p className="font-semibold text-sm">{p.label}</p>
-                  <p className="text-xs text-gray-400">{p.desc}</p>
+            {PAYMENT.map((p) => {
+              const disabled = p.value !== "COD";
+              return (
+                <div key={p.value}>
+                  <div className={`flex items-center gap-3 p-3.5 border-2 rounded-xl transition-all ${disabled ? "border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed" : "border-primary bg-primary/5 cursor-pointer"}`}>
+                    <input type="radio" name="payment" value={p.value} checked={!disabled} disabled={disabled} className="accent-primary" readOnly />
+                    <p.icon className={`text-xl ${p.color}`} />
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">{p.label}</p>
+                      <p className="text-xs text-gray-400">{p.desc}</p>
+                    </div>
+                    {disabled && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full flex-shrink-0">Coming Soon</span>
+                    )}
+                  </div>
                 </div>
-              </label>
-            ))}
+              );
+            })}
           </div>
         </div>
 
