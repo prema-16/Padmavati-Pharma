@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaShieldAlt, FaTruck, FaTag, FaHeadset, FaFileInvoiceDollar, FaRedo, FaPills, FaSyringe, FaStethoscope, FaCut, FaStar, FaHeart, FaFlask, FaFirstAid, FaHandSparkles, FaMapMarkerAlt, FaPhone, FaWhatsapp, FaEnvelope, FaClock, FaDirections } from "react-icons/fa";
+import { FaShieldAlt, FaTruck, FaTag, FaHeadset, FaFileInvoiceDollar, FaRedo, FaPills, FaSyringe, FaStethoscope, FaCut, FaFlask, FaFirstAid, FaHandSparkles, FaMapMarkerAlt, FaPhone, FaWhatsapp, FaEnvelope, FaClock, FaDirections } from "react-icons/fa";
 
 const features = [
   { icon: FaShieldAlt, title: "100% Genuine Products", desc: "Every product sourced directly from licensed manufacturers and verified for authenticity.", color: "text-primary bg-primary/10" },
@@ -20,11 +20,6 @@ const categories = [
   { icon: FaHandSparkles, name: "Personal Care", count: "500+ items", q: "Personal Care" },
 ];
 
-const testimonials = [
-  { name: "Dr. Rahul Sharma", title: "Apollo Pharmacy, Mumbai", text: "Excellent service and genuine medicines. Order tracking is very helpful and delivery is always on time.", rating: 5, initials: "R", color: "bg-primary" },
-  { name: "Priya Nair", title: "City Medical Store, Chennai", text: "Best wholesale prices in the market. GST invoicing is seamless and inventory is always well-stocked.", rating: 5, initials: "P", color: "bg-green-600" },
-  { name: "Dr. Amit Patel", title: "Sunrise Clinic, Ahmedabad", text: "Running a small clinic, I need reliable supply. Padmavati Pharma has never let me down.", rating: 4, initials: "A", color: "bg-orange-500" },
-];
 
 export default function Home() {
   return (
@@ -151,28 +146,6 @@ export default function Home() {
                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-5 ${f.color}`}><f.icon /></div>
                 <h3 className="font-bold text-gray-800 mb-2">{f.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="inline-block bg-primary/10 text-primary text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider mb-3">Testimonials</span>
-            <h2 className="text-3xl font-bold text-gray-800">Trusted by Healthcare Professionals</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t) => (
-              <div key={t.name} className="bg-white border border-gray-100 rounded-2xl p-7 hover:shadow-md transition-all">
-                <div className="flex gap-1 mb-4">{[...Array(5)].map((_,i)=><FaStar key={i} className={i < t.rating ? "text-yellow-400" : "text-gray-200"} />)}</div>
-                <p className="text-gray-500 text-sm italic leading-7 mb-5">"{t.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 ${t.color} text-white rounded-full flex items-center justify-center font-bold`}>{t.initials}</div>
-                  <div><p className="font-semibold text-sm">{t.name}</p><p className="text-xs text-gray-400">{t.title}</p></div>
-                </div>
               </div>
             ))}
           </div>
