@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
+import BottomNav from "./components/common/BottomNav";
 
 // Public pages
 import Home from "./pages/Home";
@@ -39,10 +40,11 @@ function PublicLayout() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 pb-mobile">
         <Outlet />
       </main>
       <Footer />
+      <BottomNav />
     </div>
   );
 }

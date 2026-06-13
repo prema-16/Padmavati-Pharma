@@ -30,97 +30,85 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-primary via-primary-dark to-blue-900 text-white py-20 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-primary via-primary-dark to-blue-900 text-white py-10 sm:py-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/svg%3E\")" }} />
 
-        <div className="max-w-7xl mx-auto px-6 relative grid md:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative grid md:grid-cols-2 gap-8 md:gap-12 items-center">
 
           {/* LEFT — Heading & CTA */}
           <div>
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm font-semibold mb-6">
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-3 py-1 text-xs sm:text-sm font-semibold mb-4">
               <FaShieldAlt /> Trusted Since 2024
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-5">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold leading-tight mb-3 sm:mb-5">
               India's Leading <span className="text-sky-300">Padmavati Pharma</span> Distributor
             </h1>
-            <p className="text-blue-100 text-lg mb-8 leading-relaxed">
+            <p className="text-blue-100 text-sm sm:text-lg mb-6 sm:mb-8 leading-relaxed">
               Supplying quality medicines and healthcare products to 1,000+ pharmacies, clinics, hospitals and medical stores with guaranteed authenticity.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link to="/products" className="bg-white text-primary font-bold px-7 py-3.5 rounded-xl hover:bg-blue-50 transition-all flex items-center gap-2">
+            <div className="flex flex-col xs:flex-row gap-3">
+              <Link to="/products" className="bg-white text-primary font-bold px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2 text-sm sm:text-base">
                 <FaPills /> Browse Products
               </Link>
-              <Link to="/register" className="border-2 border-white/60 text-white font-bold px-7 py-3.5 rounded-xl hover:bg-white/10 transition-all">
+              <Link to="/register" className="border-2 border-white/60 text-white font-bold px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl hover:bg-white/10 transition-all text-center text-sm sm:text-base">
                 Register Now →
               </Link>
             </div>
-            <div className="flex gap-10 mt-12">
+            <div className="flex gap-6 sm:gap-10 mt-8 sm:mt-12">
               {[["600+","Products"],["1,000+","Clients"],["98%","Satisfaction"]].map(([v,l])=>(
-                <div key={l}><p className="text-3xl font-bold">{v}</p><p className="text-blue-200 text-sm">{l}</p></div>
+                <div key={l}><p className="text-xl sm:text-3xl font-bold">{v}</p><p className="text-blue-200 text-xs sm:text-sm">{l}</p></div>
               ))}
             </div>
           </div>
 
-          {/* RIGHT — Address Card */}
-          <div className="flex justify-center md:justify-end">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-7 w-full max-w-sm text-white shadow-2xl">
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-5 pb-4 border-b border-white/20">
-                <div className="w-11 h-11 bg-yellow-400 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <FaPills className="text-blue-900 text-xl" />
+          {/* RIGHT — Address Card (hidden on small mobile, visible sm+) */}
+          <div className="hidden sm:flex justify-center md:justify-end">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 w-full max-w-sm text-white shadow-2xl">
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/20">
+                <div className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FaPills className="text-blue-900 text-lg" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg leading-tight">Padmavati Pharma</h3>
+                  <h3 className="font-bold text-base leading-tight">Padmavati Pharma</h3>
                   <p className="text-blue-200 text-xs">Visit Our Store</p>
                 </div>
               </div>
-
-              {/* Address */}
-              <div className="flex items-start gap-3 mb-4">
-                <FaMapMarkerAlt className="text-yellow-300 text-lg mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-sm mb-0.5">Office Address</p>
-                  <p className="text-blue-100 text-sm leading-6">
-                    B8, Aaraj Complex, UG Floor No. 6,<br />
-                    Khadkat Road, Near Irrigation Office,<br />
-                    <span className="text-white font-semibold">Khasbag, Ashti, Beed,</span><br />
-                    Maharashtra – 414203, India
-                  </p>
-                </div>
+              <div className="flex items-start gap-3 mb-3">
+                <FaMapMarkerAlt className="text-yellow-300 text-base mt-0.5 flex-shrink-0" />
+                <p className="text-blue-100 text-sm leading-6">B8, Aaraj Complex, UG Floor No. 6,<br/>Khadkat Road, Near Irrigation Office,<br/><span className="text-white font-semibold">Khasbag, Ashti, Beed, MH – 414203</span></p>
               </div>
-
-              {/* Phone */}
-              <a href="tel:+917498520397" className="flex items-center gap-3 mb-3 hover:text-yellow-300 transition-colors group">
+              <a href="tel:+917498520397" className="flex items-center gap-3 mb-2.5 hover:text-yellow-300 transition-colors">
                 <FaPhone className="text-yellow-300 text-sm flex-shrink-0" />
                 <span className="text-sm font-medium">+91 7498520397</span>
               </a>
-
-              {/* WhatsApp */}
-              <a href="https://wa.me/917498520397" target="_blank" rel="noreferrer" className="flex items-center gap-3 mb-3 hover:text-yellow-300 transition-colors group">
+              <a href="https://wa.me/917498520397" target="_blank" rel="noreferrer" className="flex items-center gap-3 mb-2.5 hover:text-yellow-300 transition-colors">
                 <FaWhatsapp className="text-green-300 text-base flex-shrink-0" />
                 <span className="text-sm font-medium">+91 7498520397 (WhatsApp)</span>
               </a>
-
-              {/* Email */}
-              <a href="mailto:sunillambade02@gmail.com" className="flex items-center gap-3 mb-5 hover:text-yellow-300 transition-colors group">
+              <a href="mailto:sunillambade02@gmail.com" className="flex items-center gap-3 mb-4 hover:text-yellow-300 transition-colors">
                 <FaEnvelope className="text-yellow-300 text-sm flex-shrink-0" />
                 <span className="text-sm font-medium">sunillambade02@gmail.com</span>
               </a>
-
-              {/* Hours */}
-              <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center gap-3 mb-4">
                 <FaClock className="text-yellow-300 text-sm flex-shrink-0" />
                 <span className="text-blue-100 text-sm">Mon – Sat: 9:00 AM – 7:00 PM</span>
               </div>
-
-              {/* Directions Button */}
-              <a
-                href="https://maps.google.com/?q=Khasbag+Ashti+Beed+Maharashtra"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold py-2.5 rounded-xl transition-all text-sm"
-              >
+              <a href="https://maps.google.com/?q=Khasbag+Ashti+Beed+Maharashtra" target="_blank" rel="noreferrer"
+                className="flex items-center justify-center gap-2 w-full bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold py-2.5 rounded-xl transition-all text-sm">
                 <FaDirections /> Get Directions
+              </a>
+            </div>
+          </div>
+
+          {/* Mobile address strip */}
+          <div className="sm:hidden bg-white/10 border border-white/20 rounded-xl p-4 flex flex-col gap-2.5">
+            <div className="flex items-center gap-2 text-sm"><FaMapMarkerAlt className="text-yellow-300 flex-shrink-0" /><span className="text-blue-100 text-xs">Khasbag, Ashti, Beed, MH – 414203</span></div>
+            <div className="flex gap-3">
+              <a href="tel:+917498520397" className="flex-1 flex items-center justify-center gap-2 bg-yellow-400 text-blue-900 font-bold py-2 rounded-lg text-xs">
+                <FaPhone /> Call Now
+              </a>
+              <a href="https://wa.me/917498520397" target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-green-500 text-white font-bold py-2 rounded-lg text-xs">
+                <FaWhatsapp /> WhatsApp
               </a>
             </div>
           </div>

@@ -1,30 +1,33 @@
 import { imgUrl } from "../../services/imageHelper";
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import api from "../../services/api";
 import Spinner from "../../components/common/Spinner";
 import toast from "react-hot-toast";
 
 const STEPS = ["Pending","Confirmed","Packed","Shipped","Delivered"];
-const STATUS_COLORS = { Pending:"badge-warning", Confirmed:"badge-info", Packed:"badge-primary", Shipped:"badge-info", Delivered:"badge-success", Cancelled:"badge-danger" };
+const STATUS_BG = { Pending:"bg-yellow-100 text-yellow-700", Confirmed:"bg-blue-100 text-blue-700", Packed:"bg-indigo-100 text-indigo-700", Shipped:"bg-cyan-100 text-cyan-700", Delivered:"bg-green-100 text-green-700", Cancelled:"bg-red-100 text-red-600" };
 
 export default function OrderDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
   const [reason, setReason] = useState("");
+  const [showCancel, setShowCancel] = useState(false);
 
   useEffect(() => {
     api.get(`/orders/${id}`).then(r => setOrder(r.data.order)).finally(() => setLoading(false));
   }, [id]);
 
   const handleCancel = async () => {
-    if (!window.confirm("Cancel this order?")) return;
     setCancelling(true);
     try {
       const r = await api.put(`/orders/${id}/cancel`, { reason });
       setOrder(r.data.order);
+      setShowCancel(false);
       toast.success("Order cancelled");
     } catch (err) { toast.error(err.response?.data?.message || "Failed"); }
     finally { setCancelling(false); }
@@ -37,117 +40,142 @@ export default function OrderDetail() {
   const cancelled = order.status === "Cancelled";
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <div className="flex items-center justify-between mb-7">
-        <div><h1 className="text-2xl font-bold">Order Details</h1><p className="text-gray-400 text-sm">{order.orderNumber}</p></div>
-        <Link to="/my-orders" className="btn-outline py-2 text-sm">← My Orders</Link>
-      </div>
-
-      <div className="grid lg:grid-cols-[1fr_300px] gap-6">
+    <div className="max-w-2xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-5">
+        <button onClick={() => navigate(-1)} className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600">
+          <FaArrowLeft className="text-sm" />
+        </button>
         <div>
-          {/* Status Stepper */}
-          <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-5 shadow-sm">
-            <div className="flex items-center justify-between mb-2 flex-wrap gap-3">
-              <div className="flex items-center gap-3">
-                <span className={STATUS_COLORS[order.status] || "badge-primary"} style={{fontSize:"0.85rem",padding:"6px 14px"}}>{order.status}</span>
-                <span className="text-sm text-gray-400">{new Date(order.createdAt).toLocaleString("en-IN")}</span>
-              </div>
-              <span className="font-bold text-primary text-xl">₹{order.totalPrice?.toFixed(2)}</span>
-            </div>
-            {order.trackingNumber && <div className="bg-blue-50 rounded-lg px-4 py-2.5 text-sm text-blue-700 mt-3">🚚 Tracking: <strong>{order.trackingNumber}</strong></div>}
+          <h1 className="text-lg sm:text-xl font-bold leading-tight">Order Details</h1>
+          <p className="text-xs text-gray-400">{order.orderNumber}</p>
+        </div>
+        <span className={`ml-auto text-xs font-bold px-3 py-1.5 rounded-full ${STATUS_BG[order.status] || "bg-gray-100 text-gray-600"}`}>
+          {order.status}
+        </span>
+      </div>
 
-            {!cancelled && (
-              <div className="flex items-start justify-between mt-6">
-                {STEPS.map((step, idx) => {
-                  const done = idx < currentIdx;
-                  const active = idx === currentIdx;
-                  return (
-                    <div key={step} className={`flex-1 text-center relative ${idx < STEPS.length - 1 ? "after:content-[''] after:absolute after:top-4 after:left-1/2 after:w-full after:h-0.5 after:z-0 " + (done ? "after:bg-green-400" : "after:bg-gray-200") : ""}`}>
-                      <div className={`relative z-10 w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-2 text-sm border-2 transition-all ${done ? "bg-green-500 border-green-500 text-white" : active ? "border-primary text-primary bg-white shadow-md shadow-primary/20" : "border-gray-200 text-gray-400 bg-white"}`}>
-                        {done ? "✓" : idx + 1}
-                      </div>
-                      <p className={`text-xs font-semibold ${done || active ? "text-gray-700" : "text-gray-400"}`}>{step}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-            {cancelled && <div className="mt-4 bg-red-50 border border-red-100 rounded-xl p-3 text-sm text-red-600">🚫 Cancelled{order.cancelReason ? `: ${order.cancelReason}` : ""}</div>}
-          </div>
-
-          {/* Items */}
-          <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm mb-5">
-            <div className="px-6 py-4 border-b border-gray-100 font-bold">Order Items</div>
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-xs font-bold text-gray-500 uppercase"><tr><th className="px-5 py-3 text-left">Product</th><th className="px-5 py-3">Qty</th><th className="px-5 py-3">Price</th><th className="px-5 py-3">Total</th></tr></thead>
-              <tbody>
-                {order.items.map((item) => (
-                  <tr key={item._id} className="border-t border-gray-50">
-                    <td className="px-5 py-4 flex items-center gap-3">
-                      {item.product?.image ? <img src={imgUrl(item.product.image)} className="w-10 h-10 object-cover rounded-lg" alt="" /> : <div className="w-10 h-10 bg-gray-100 rounded-lg" />}
-                      <span className="font-medium">{item.product?.name || "N/A"}</span>
-                    </td>
-                    <td className="px-5 py-4 text-center">{item.quantity}</td>
-                    <td className="px-5 py-4 text-center">₹{item.price?.toFixed(2)}</td>
-                    <td className="px-5 py-4 text-center font-bold text-primary">₹{item.total?.toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="px-5 py-4 bg-gray-50 text-right text-sm space-y-1">
-              <p>Subtotal: ₹{order.subtotal?.toFixed(2)} | GST: ₹{order.gstAmount?.toFixed(2)}</p>
-              <p className="font-bold text-base text-primary">Total: ₹{order.totalPrice?.toFixed(2)}</p>
-            </div>
-          </div>
-
-          {/* Status History */}
-          {order.statusHistory?.length > 0 && (
-            <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-              <h3 className="font-bold mb-5">Activity Log</h3>
-              <div className="space-y-4">
-                {[...order.statusHistory].reverse().map((h, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 text-primary text-xs font-bold mt-0.5">✓</div>
-                    <div>
-                      <p className="font-semibold text-sm">{h.status}</p>
-                      {h.notes && <p className="text-xs text-gray-400">{h.notes}</p>}
-                      <p className="text-xs text-gray-300 mt-1">{new Date(h.timestamp).toLocaleString("en-IN")}</p>
-                    </div>
+      {/* Status Stepper */}
+      {!cancelled ? (
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            {STEPS.map((step, idx) => {
+              const done = idx < currentIdx;
+              const active = idx === currentIdx;
+              return (
+                <div key={step} className={`flex-1 flex flex-col items-center relative
+                  ${idx < STEPS.length - 1 ? "after:content-[''] after:absolute after:top-3.5 after:left-[55%] after:w-[calc(100%-10px)] after:h-0.5 " + (done ? "after:bg-green-400" : "after:bg-gray-200") : ""}`}>
+                  <div className={`relative z-10 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all mb-1
+                    ${done ? "bg-green-500 border-green-500 text-white"
+                    : active ? "border-primary text-primary bg-white shadow shadow-primary/30"
+                    : "border-gray-200 text-gray-300 bg-white"}`}>
+                    {done ? "✓" : idx + 1}
                   </div>
-                ))}
-              </div>
+                  <p className={`text-[10px] font-semibold text-center ${done || active ? "text-gray-700" : "text-gray-400"}`}>{step}</p>
+                </div>
+              );
+            })}
+          </div>
+          {order.trackingNumber && (
+            <div className="mt-4 bg-blue-50 rounded-xl px-3 py-2 text-xs text-blue-700">
+              🚚 Tracking: <strong>{order.trackingNumber}</strong>
             </div>
           )}
         </div>
+      ) : (
+        <div className="bg-red-50 border border-red-100 rounded-2xl p-4 mb-4 text-sm text-red-600">
+          🚫 Order Cancelled{order.cancelReason ? ` — ${order.cancelReason}` : ""}
+        </div>
+      )}
 
-        {/* Sidebar */}
-        <div className="space-y-5">
-          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-            <h4 className="font-bold mb-3 text-sm">Shipping To</h4>
-            {order.shippingAddress && (
-              <div className="text-sm text-gray-600 space-y-1 leading-6">
-                <p className="font-semibold">{order.shippingAddress.companyName}</p>
-                <p>{order.shippingAddress.contactPerson}</p>
-                <p>📞 {order.shippingAddress.phone}</p>
-                <p className="text-gray-400">{order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.zipCode}</p>
+      {/* Order Items */}
+      <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm mb-4">
+        <p className="font-bold text-sm px-4 py-3 border-b border-gray-100">Order Items</p>
+        <div className="divide-y divide-gray-50">
+          {order.items.map((item) => (
+            <div key={item._id} className="flex items-center gap-3 px-4 py-3">
+              <div className="w-12 h-12 rounded-xl bg-gray-50 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                {item.product?.image ? <img src={imgUrl(item.product.image)} className="w-full h-full object-contain p-0.5" alt="" /> : <span>💊</span>}
               </div>
-            )}
-          </div>
-          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-            <h4 className="font-bold mb-3 text-sm">Payment</h4>
-            <div className="flex justify-between text-sm mb-2"><span className="text-gray-400">Method</span><strong>{order.paymentMethod}</strong></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-400">Status</span><span className={order.paymentStatus==="Paid"?"badge-success":"badge-warning"}>{order.paymentStatus}</span></div>
-          </div>
-
-          {["Pending","Confirmed"].includes(order.status) && (
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-              <h4 className="font-bold mb-3 text-sm text-red-500">Cancel Order</h4>
-              <textarea value={reason} onChange={e=>setReason(e.target.value)} className="input text-sm mb-3" rows="2" placeholder="Reason for cancellation (optional)" />
-              <button onClick={handleCancel} disabled={cancelling} className="btn-danger w-full py-2 text-sm disabled:opacity-60">{cancelling?"Cancelling...":"Cancel Order"}</button>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm line-clamp-1">{item.product?.name || "N/A"}</p>
+                <p className="text-xs text-gray-400">Qty: {item.quantity} × ₹{item.price?.toFixed(0)}</p>
+              </div>
+              <p className="font-bold text-primary text-sm">₹{item.total?.toFixed(0)}</p>
             </div>
-          )}
+          ))}
+        </div>
+        <div className="bg-gray-50 px-4 py-3 text-right space-y-1">
+          <p className="text-xs text-gray-500">Subtotal ₹{order.subtotal?.toFixed(0)} + GST ₹{order.gstAmount?.toFixed(0)}</p>
+          <p className="font-bold text-base text-primary">Total: ₹{order.totalPrice?.toFixed(0)}</p>
         </div>
       </div>
+
+      {/* Shipping + Payment */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+          <p className="font-bold text-xs text-gray-500 uppercase mb-2">Ship To</p>
+          {order.shippingAddress && (
+            <div className="text-xs text-gray-600 leading-5 space-y-0.5">
+              <p className="font-semibold text-sm text-gray-800">{order.shippingAddress.companyName}</p>
+              <p>{order.shippingAddress.contactPerson}</p>
+              <p>📞 {order.shippingAddress.phone}</p>
+              <p className="text-gray-400">{order.shippingAddress.city}, {order.shippingAddress.state}</p>
+            </div>
+          )}
+        </div>
+        <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+          <p className="font-bold text-xs text-gray-500 uppercase mb-2">Payment</p>
+          <p className="font-semibold text-sm text-gray-800">{order.paymentMethod}</p>
+          <span className={`text-xs font-bold px-2 py-0.5 rounded-full mt-1 inline-block ${order.paymentStatus==="Paid"?"bg-green-100 text-green-700":"bg-yellow-100 text-yellow-700"}`}>
+            {order.paymentStatus}
+          </span>
+          <p className="text-xs text-gray-400 mt-2">{new Date(order.createdAt).toLocaleDateString("en-IN")}</p>
+        </div>
+      </div>
+
+      {/* Status History */}
+      {order.statusHistory?.length > 0 && (
+        <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm mb-4">
+          <p className="font-bold text-sm mb-3">Activity</p>
+          <div className="space-y-3">
+            {[...order.statusHistory].reverse().map((h, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 text-primary text-xs mt-0.5">✓</div>
+                <div>
+                  <p className="font-semibold text-sm">{h.status}</p>
+                  {h.notes && <p className="text-xs text-gray-400">{h.notes}</p>}
+                  <p className="text-xs text-gray-300">{new Date(h.timestamp).toLocaleString("en-IN")}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Cancel button */}
+      {["Pending","Confirmed"].includes(order.status) && (
+        <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+          {!showCancel ? (
+            <button onClick={() => setShowCancel(true)} className="w-full py-3 border-2 border-red-200 text-red-500 rounded-xl font-semibold text-sm hover:bg-red-50 transition-all">
+              Cancel Order
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <textarea value={reason} onChange={e=>setReason(e.target.value)} className="input text-sm" rows="2" placeholder="Reason (optional)" />
+              <div className="flex gap-2">
+                <button onClick={handleCancel} disabled={cancelling}
+                  className="flex-1 py-3 bg-red-500 text-white rounded-xl font-semibold text-sm disabled:opacity-60">
+                  {cancelling ? "Cancelling..." : "Confirm Cancel"}
+                </button>
+                <button onClick={() => setShowCancel(false)} className="flex-1 py-3 bg-gray-100 text-gray-600 rounded-xl font-semibold text-sm">
+                  Keep Order
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
