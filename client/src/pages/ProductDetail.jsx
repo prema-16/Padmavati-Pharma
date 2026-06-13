@@ -56,7 +56,7 @@ export default function ProductDetail() {
       <div className="grid md:grid-cols-2 gap-12 mb-16">
         {/* Image */}
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          {product.image ? <img src={imgUrl(product.image)} alt={product.name} className="w-full h-96 object-cover" /> : <div className="w-full h-96 flex items-center justify-center bg-primary/5 text-8xl opacity-20">💊</div>}
+          {product.image ? <img src={imgUrl(product.image)} alt={product.name} className="w-full h-96 object-contain p-4" /> : <div className="w-full h-96 flex items-center justify-center bg-primary/5 text-8xl opacity-20">💊</div>}
         </div>
 
         {/* Info */}

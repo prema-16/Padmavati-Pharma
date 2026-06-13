@@ -28,14 +28,24 @@ export default function Products() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({});
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState(() => ({
     search: searchParams.get("search") || "",
     category: searchParams.get("category") || "",
     sort: searchParams.get("sort") || "-createdAt",
     page: 1,
-  });
+  }));
 
   useEffect(() => { api.get("/categories").then((r) => setCategories(r.data.categories)); }, []);
+
+  // Sync filters when URL search params change (e.g. navigating from Home category links)
+  useEffect(() => {
+    setFilters({
+      search: searchParams.get("search") || "",
+      category: searchParams.get("category") || "",
+      sort: searchParams.get("sort") || "-createdAt",
+      page: 1,
+    });
+  }, [searchParams]);
 
   useEffect(() => {
     setLoading(true);
