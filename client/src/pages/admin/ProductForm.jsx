@@ -21,7 +21,6 @@ export default function ProductForm() {
   const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => { api.get("/categories/all").then(r => setCategories(r.data.categories)); }, []);
-
   useEffect(() => {
     if (isEdit) {
       api.get(`/products/${id}`).then(r => {
@@ -43,7 +42,14 @@ export default function ProductForm() {
 
   const handleImage = (e) => {
     const file = e.target.files[0];
-    if (file) { setImageFile(file); setPreview(URL.createObjectURL(file)); }
+    if (!file) return;
+    if (file.size > 799 * 1024) {
+      toast.error("Image size must be less than 799 KB");
+      e.target.value = "";
+      return;
+    }
+    setImageFile(file);
+    setPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
@@ -108,9 +114,10 @@ export default function ProductForm() {
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h3 className="font-bold mb-4">Product Image</h3>
               <div className="w-full h-44 rounded-xl overflow-hidden bg-gray-50 border-2 border-dashed border-gray-200 mb-3 flex items-center justify-center">
-                {preview ? <img src={preview} className="w-full h-full object-cover" alt="" /> : <div className="text-center text-gray-400"><div className="text-4xl mb-2">🖼️</div><p className="text-xs">No image selected</p></div>}
+                {preview ? <img src={preview} className="w-full h-full object-contain" alt="" /> : <div className="text-center text-gray-400"><div className="text-4xl mb-2">🖼️</div><p className="text-xs">No image selected</p></div>}
               </div>
               <input type="file" accept="image/*" onChange={handleImage} className="input text-sm" />
+              <p className="text-xs text-gray-400 mt-1.5">Max size: 799 KB</p>
             </div>
 
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
