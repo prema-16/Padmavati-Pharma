@@ -73,8 +73,8 @@ export default function Products() {
           <span className="text-xs text-gray-500 hidden sm:block">Sort:</span>
           <select value={filters.sort} onChange={(e) => handleFilter("sort", e.target.value)} className="input w-auto text-xs sm:text-sm py-2 pr-8">
             <option value="-createdAt">Newest</option>
-            <option value="distributorPrice">Price ↑</option>
-            <option value="-distributorPrice">Price ↓</option>
+            <option value="distributorPrice">Price ↓</option>
+            <option value="-distributorPrice">Price ↑</option>
           </select>
         </div>
       </div>
