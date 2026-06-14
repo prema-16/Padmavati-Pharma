@@ -10,7 +10,7 @@ export default function BottomNav() {
   if (!user || user.role !== "customer") return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 sm:hidden bg-white border-t border-gray-200 shadow-2xl">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 sm:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shadow-2xl transition-colors duration-200">
       <div className="grid grid-cols-5 h-16">
         <NavLink to="/" end className={({ isActive }) =>
           `flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors ${isActive ? "text-primary" : "text-gray-400"}`}>
@@ -50,7 +50,7 @@ export default function BottomNav() {
         </NavLink>
       </div>
       {/* iOS safe area */}
-      <div className="h-safe-bottom bg-white" />
+      <div className="h-safe-bottom bg-white dark:bg-gray-900" />
     </nav>
   );
 }

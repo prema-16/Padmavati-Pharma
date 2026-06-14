@@ -5,27 +5,35 @@
 @layer base {
   * { font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; }
-  body { @apply bg-gray-50 text-gray-800; overscroll-behavior-y: none; }
-  /* Better touch targets on mobile */
+  body { @apply bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-100; overscroll-behavior-y: none; }
   button, a { min-height: 44px; }
 }
 
 @layer components {
-  .btn-primary  { @apply bg-primary text-white px-5 py-3 rounded-xl font-semibold hover:bg-primary-dark active:scale-95 transition-all duration-150 flex items-center gap-2 justify-center text-sm; }
-  .btn-secondary{ @apply bg-secondary text-white px-5 py-3 rounded-xl font-semibold hover:opacity-90 active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
-  .btn-outline  { @apply border-2 border-primary text-primary px-5 py-3 rounded-xl font-semibold hover:bg-primary hover:text-white active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
-  .btn-danger   { @apply bg-red-600 text-white px-5 py-3 rounded-xl font-semibold hover:bg-red-700 active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
-  .card  { @apply bg-white rounded-2xl shadow-sm border border-gray-100; }
-  .input { @apply w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all; }
-  .label { @apply block text-sm font-semibold text-gray-700 mb-1.5; }
-  .badge-success { @apply bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
-  .badge-warning { @apply bg-yellow-100 text-yellow-700 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
-  .badge-danger  { @apply bg-red-100 text-red-700 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
-  .badge-info    { @apply bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
-  .badge-primary { @apply bg-blue-50 text-primary text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
-  .stat-card     { @apply bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm flex items-center gap-4; }
-  /* Mobile bottom nav safe area */
+  /* Buttons */
+  .btn-primary   { @apply bg-primary text-white px-5 py-3 rounded-xl font-semibold hover:bg-primary-dark active:scale-95 transition-all duration-150 flex items-center gap-2 justify-center text-sm; }
+  .btn-secondary { @apply bg-secondary text-white px-5 py-3 rounded-xl font-semibold hover:opacity-90 active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
+  .btn-outline   { @apply border-2 border-primary text-primary px-5 py-3 rounded-xl font-semibold hover:bg-primary hover:text-white active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
+  .btn-danger    { @apply bg-red-600 text-white px-5 py-3 rounded-xl font-semibold hover:bg-red-700 active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
+
+  /* Cards */
+  .card { @apply bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700; }
+
+  /* Inputs */
+  .input { @apply w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all; }
+  .label { @apply block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5; }
+
+  /* Badges */
+  .badge-success { @apply bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
+  .badge-warning { @apply bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
+  .badge-danger  { @apply bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
+  .badge-info    { @apply bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
+  .badge-primary { @apply bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-400 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide; }
+
+  /* Stat cards */
+  .stat-card { @apply bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 border border-gray-100 dark:border-gray-700 shadow-sm flex items-center gap-4; }
+
+  /* Layout helpers */
   .pb-mobile { @apply pb-20 sm:pb-0; }
-  /* Touch card */
   .touch-card { @apply active:scale-95 transition-transform duration-100; }
 }
