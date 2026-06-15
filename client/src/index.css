@@ -5,7 +5,35 @@
 @layer base {
   * { font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; }
-  body { @apply bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-100; overscroll-behavior-y: none; }
+
+  body {
+    @apply bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-100;
+    overscroll-behavior-y: none;
+  }
+
+  /* Global dark mode defaults for common patterns */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    @apply text-gray-100;
+  }
+  .dark p { color: inherit; }
+
+  /* Global dark mode overrides for tailwind utility classes */
+  .dark .bg-white {
+    @apply bg-gray-900;
+  }
+  .dark .border-gray-100 {
+    @apply border-gray-800;
+  }
+  .dark .text-gray-800 {
+    @apply text-gray-100;
+  }
+  .dark .text-gray-700 {
+    @apply text-gray-200;
+  }
+  .dark .text-gray-600 {
+    @apply text-gray-300;
+  }
+
   button, a { min-height: 44px; }
 }
 
@@ -16,11 +44,21 @@
   .btn-outline   { @apply border-2 border-primary text-primary px-5 py-3 rounded-xl font-semibold hover:bg-primary hover:text-white active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
   .btn-danger    { @apply bg-red-600 text-white px-5 py-3 rounded-xl font-semibold hover:bg-red-700 active:scale-95 transition-all text-sm flex items-center gap-2 justify-center; }
 
-  /* Cards */
+  /* Cards — white in light, dark surface in dark */
   .card { @apply bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700; }
 
-  /* Inputs */
-  .input { @apply w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all; }
+  /* Inputs — full dark mode treatment */
+  .input {
+    @apply w-full border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-sm
+           bg-white dark:bg-gray-800
+           text-gray-800 dark:text-gray-100
+           placeholder-gray-400 dark:placeholder-gray-500
+           focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10
+           transition-all;
+  }
+  .input option {
+    @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100;
+  }
   .label { @apply block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5; }
 
   /* Badges */
@@ -36,4 +74,11 @@
   /* Layout helpers */
   .pb-mobile { @apply pb-20 sm:pb-0; }
   .touch-card { @apply active:scale-95 transition-transform duration-100; }
+
+  /* Dark mode surface helpers — use these on white cards/panels */
+  .surface { @apply bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700; }
+  .surface-2 { @apply bg-gray-50 dark:bg-gray-900; }
+  .text-muted { @apply text-gray-500 dark:text-gray-400; }
+  .text-heading { @apply text-gray-800 dark:text-gray-100; }
+  .divider { @apply border-gray-100 dark:border-gray-700; }
 }
