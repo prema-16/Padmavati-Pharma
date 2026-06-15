@@ -55,7 +55,8 @@ export default function AdminOrders() {
 
       {loading ? <Spinner /> : (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="overflow-x-auto hidden md:block">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 text-xs font-bold text-gray-500 uppercase">
                 <tr><th className="px-5 py-3.5 text-left">Order</th><th className="px-5 py-3.5 text-left">Customer</th><th className="px-5 py-3.5">Items</th><th className="px-5 py-3.5">Total</th><th className="px-5 py-3.5">Status</th><th className="px-5 py-3.5">Date</th><th className="px-5 py-3.5">Actions</th></tr>
@@ -80,6 +81,34 @@ export default function AdminOrders() {
                 {orders.length === 0 && <tr><td colSpan="7" className="text-center py-12 text-gray-400">No orders found</td></tr>}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile View Cards */}
+          <div className="md:hidden divide-y divide-gray-100">
+            {orders.map((o) => (
+              <div key={o._id} className="p-4 hover:bg-gray-50 flex flex-col gap-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-gray-900 text-sm">#{o.orderNumber?.split("-").pop() || o._id.toString().slice(-6).toUpperCase()}</span>
+                  <span className="text-xs text-gray-400">{new Date(o.createdAt).toLocaleDateString("en-IN")}</span>
+                </div>
+                <div className="text-sm">
+                  <p className="font-semibold text-gray-800">{o.user?.companyName || o.user?.name}</p>
+                  <p className="text-xs text-gray-400">{o.user?.email}</p>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <div><span className="text-gray-400">Items:</span> <span className="font-semibold text-gray-700">{o.items?.length} item(s)</span></div>
+                  <div><span className="text-gray-400">Total:</span> <span className="font-bold text-primary">₹{(o.totalPrice||0).toFixed(2)}</span></div>
+                </div>
+                <div className="flex justify-between items-center gap-4 mt-1">
+                  <span className={`text-[10px] ${STATUS_COLORS[o.status]||"badge-primary"}`}>{o.status}</span>
+                  <div className="flex gap-2">
+                    <button onClick={() => navigate(`/admin/orders/${o._id}`)} className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs hover:border-primary text-gray-600 bg-white">View</button>
+                    <button onClick={() => openModal(o)} className="px-3 py-1.5 bg-primary text-white rounded-lg text-xs hover:bg-primary-dark">Update</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {orders.length === 0 && <p className="p-5 text-center text-gray-400 text-sm">No orders found</p>}
           </div>
         </div>
       )}

@@ -44,7 +44,8 @@ export default function AdminUsers() {
 
       {loading ? <Spinner /> : (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="overflow-x-auto hidden md:block">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 text-xs font-bold text-gray-500 uppercase">
                 <tr><th className="px-5 py-3.5 text-left">User</th><th className="px-5 py-3.5">Company</th><th className="px-5 py-3.5">Phone</th><th className="px-5 py-3.5">Role</th><th className="px-5 py-3.5">Status</th><th className="px-5 py-3.5">Joined</th><th className="px-5 py-3.5">Actions</th></tr>
@@ -76,6 +77,35 @@ export default function AdminUsers() {
                 {users.length === 0 && <tr><td colSpan="7" className="text-center py-12 text-gray-400">No users found</td></tr>}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile View Cards */}
+          <div className="md:hidden divide-y divide-gray-100">
+            {users.map((u) => (
+              <div key={u._id} className="p-4 hover:bg-gray-50 flex flex-col gap-2.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">{u.name.charAt(0)}</div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-semibold text-sm text-gray-950 truncate">{u.name}</h4>
+                    <p className="text-xs text-gray-400 truncate">{u.email}</p>
+                  </div>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase flex-shrink-0 ${roleBadge(u.role)}`}>{u.role}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1.5 text-xs">
+                  <div><span className="text-gray-400">Company:</span> <span className="font-medium text-gray-700">{u.companyName || "—"}</span></div>
+                  <div><span className="text-gray-400">Phone:</span> <span className="font-medium text-gray-700">{u.phone || "—"}</span></div>
+                  <div><span className="text-gray-400">Status:</span> <span className={u.isActive !== false ? "text-green-600 font-bold" : "text-gray-400"}>{u.isActive !== false ? "Active" : "Inactive"}</span></div>
+                  <div><span className="text-gray-400">Joined:</span> <span className="text-gray-500">{new Date(u.createdAt).toLocaleDateString("en-IN")}</span></div>
+                </div>
+                {me?.role === "owner" && u._id !== me._id && (
+                  <div className="flex gap-2.5 mt-1">
+                    <button onClick={() => { setModal(u); setNewRole(u.role); }} className="flex-1 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100">Change Role</button>
+                    <button onClick={() => handleToggle(u._id)} className={`flex-1 py-1.5 rounded-lg text-xs font-semibold ${u.isActive !== false ? "bg-red-50 text-red-500 hover:bg-red-100" : "bg-green-50 text-green-600 hover:bg-green-100"}`}>{u.isActive !== false ? "Deactivate" : "Activate"}</button>
+                  </div>
+                )}
+              </div>
+            ))}
+            {users.length === 0 && <p className="p-5 text-center text-gray-400 text-sm">No users found</p>}
           </div>
         </div>
       )}

@@ -85,12 +85,12 @@ export default function ProductForm() {
               <h3 className="font-bold mb-5">Basic Information</h3>
               <div className="space-y-4">
                 <div><label className="label">Product Name *</label><input value={form.name} onChange={f("name")} className="input" required placeholder="e.g. Paracetamol 500mg" /></div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><label className="label">Category *</label><select value={form.category} onChange={f("category")} className="input" required><option value="">Select Category</option>{categories.map(c=><option key={c._id} value={c._id}>{c.name}</option>)}</select></div>
                   <div><label className="label">Manufacturer *</label><input value={form.manufacturer} onChange={f("manufacturer")} className="input" required /></div>
                 </div>
                 <div><label className="label">Description *</label><textarea value={form.description} onChange={f("description")} className="input" rows="4" required /></div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><label className="label">Medical Usage</label><input value={form.medicalUsage||""} onChange={f("medicalUsage")} className="input" /></div>
                   <div><label className="label">Dosage</label><input value={form.dosage||""} onChange={f("dosage")} className="input" /></div>
                 </div>
@@ -99,7 +99,7 @@ export default function ProductForm() {
 
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
               <h3 className="font-bold mb-5">Pricing & Stock</h3>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 <div><label className="label">MRP (₹) *</label><input type="number" value={form.mrp} onChange={f("mrp")} className="input" required min="0" step="0.01" /></div>
                 <div><label className="label">Dist. Price (₹) *</label><input type="number" value={form.distributorPrice} onChange={f("distributorPrice")} className="input" required min="0" step="0.01" /></div>
                 <div><label className="label">GST %</label><select value={form.gstPercentage} onChange={f("gstPercentage")} className="input">{[0,5,12,18,28].map(g=><option key={g} value={g}>{g}%</option>)}</select></div>

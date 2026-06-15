@@ -7,7 +7,6 @@ import {
   FaHome, FaInfoCircle, FaEnvelope, FaSun, FaMoon,
 } from "react-icons/fa";
 import { logout } from "../../redux/slices/authSlice";
-import { useDarkMode } from "../../hooks/useDarkMode";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -17,9 +16,14 @@ export default function Navbar() {
   const { items } = useSelector((s) => s.cart);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
-  const [dark, setDark] = useDarkMode();
   const dropRef = useRef(null);
   const cartCount = items?.length || 0;
+
+  // Enforce light mode and clean up any dark mode references
+  useEffect(() => {
+    document.documentElement.classList.remove("dark");
+    localStorage.removeItem("theme");
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
@@ -55,7 +59,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm transition-colors duration-200">
+      <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3">
 
           {/* Brand */}
@@ -63,11 +67,10 @@ export default function Navbar() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <FaPills className="text-white text-sm" />
             </div>
-            <span className="hidden xs:block">
-              <span className="text-gray-800 dark:text-gray-100">Padmavati</span>
-              <span className="text-primary">Pharma</span>
+            <span>
+              <span className="text-gray-800 text-base sm:text-lg">Padmavati</span>
+              <span className="text-primary text-base sm:text-lg">Pharma</span>
             </span>
-            <span className="xs:hidden text-primary">PP</span>
           </Link>
 
           {/* Desktop Nav Links */}
@@ -78,7 +81,7 @@ export default function Navbar() {
                   to={l.to}
                   end={l.to === "/"}
                   className={({ isActive }) =>
-                    `px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${isActive ? "text-primary bg-primary/10 dark:bg-primary/20" : "text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-primary/5 dark:hover:bg-primary/10"}`
+                    `px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${isActive ? "text-primary bg-primary/10" : "text-gray-600 hover:text-primary hover:bg-primary/5"}`
                   }
                 >
                   {l.label}
@@ -129,30 +132,30 @@ export default function Navbar() {
                 </button>
 
                 {dropOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl py-2 z-50">
-                    <div className="px-4 py-2.5 border-b border-gray-100 dark:border-gray-700 mb-1">
-                      <p className="font-semibold text-sm truncate dark:text-white">{user.name}</p>
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-2xl py-2 z-50">
+                    <div className="px-4 py-2.5 border-b border-gray-100 mb-1">
+                      <p className="font-semibold text-sm truncate">{user.name}</p>
                       <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${user.role === "owner" ? "bg-red-100 text-red-600" : user.role === "staff" ? "bg-yellow-100 text-yellow-700" : "bg-blue-100 text-blue-600"}`}>
                         {user.role}
                       </span>
                     </div>
                     {(user.role === "owner" || user.role === "staff") && (
-                      <Link to="/admin/dashboard" onClick={() => setDropOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:text-gray-300 transition-all">
+                      <Link to="/admin/dashboard" onClick={() => setDropOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary/5 hover:text-primary transition-all">
                         <FaTachometerAlt className="text-primary" /> Dashboard
                       </Link>
                     )}
                     {user.role === "customer" && (
                       <>
-                        <Link to="/profile" onClick={() => setDropOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:text-gray-300 transition-all">
+                        <Link to="/profile" onClick={() => setDropOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary/5 hover:text-primary transition-all">
                           <FaUser className="text-primary" /> Profile
                         </Link>
-                        <Link to="/my-orders" onClick={() => setDropOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:text-gray-300 transition-all">
+                        <Link to="/my-orders" onClick={() => setDropOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary/5 hover:text-primary transition-all">
                           <FaBox className="text-primary" /> My Orders
                         </Link>
                       </>
                     )}
-                    <hr className="my-1 border-gray-100 dark:border-gray-700" />
-                    <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 w-full transition-all">
+                    <hr className="my-1 border-gray-100" />
+                    <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 w-full transition-all">
                       <FaSignOutAlt /> Logout
                     </button>
                   </div>
@@ -168,15 +171,6 @@ export default function Navbar() {
                 </Link>
               </>
             )}
-
-            {/* Dark mode toggle */}
-            <button
-              onClick={() => setDark((d) => !d)}
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 hover:bg-primary/10 hover:text-primary transition-all"
-              aria-label="Toggle dark mode"
-            >
-              {dark ? <FaSun className="text-sm" /> : <FaMoon className="text-sm" />}
-            </button>
 
             {/* Hamburger — mobile & tablet only */}
             <button
@@ -194,24 +188,24 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden fixed inset-0 top-14 sm:top-16 z-40 bg-black/40" onClick={() => setMenuOpen(false)}>
           <div
-            className="bg-white dark:bg-gray-900 w-72 sm:w-80 h-full shadow-2xl flex flex-col overflow-y-auto"
+            className="bg-white w-72 sm:w-80 h-full shadow-2xl flex flex-col overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* User info bar */}
             {user ? (
-              <div className="flex items-center gap-3 px-5 py-4 bg-primary/5 dark:bg-primary/10 border-b border-gray-100 dark:border-gray-800">
+              <div className="flex items-center gap-3 px-5 py-4 bg-primary/5 border-b border-gray-100">
                 <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-semibold text-sm truncate dark:text-white">{user.name}</p>
+                  <p className="font-semibold text-sm truncate">{user.name}</p>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${user.role === "owner" ? "bg-red-100 text-red-600" : user.role === "staff" ? "bg-yellow-100 text-yellow-700" : "bg-blue-100 text-blue-600"}`}>
                     {user.role}
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="flex gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+              <div className="flex gap-3 px-5 py-4 border-b border-gray-100">
                 <Link to="/login" onClick={() => setMenuOpen(false)} className="flex-1 text-center py-2.5 text-sm font-semibold text-primary border-2 border-primary rounded-xl hover:bg-primary hover:text-white transition-all">
                   Login
                 </Link>
@@ -231,7 +225,7 @@ export default function Navbar() {
                   end={l.to === "/"}
                   onClick={() => setMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive ? "bg-primary text-white" : "text-gray-700 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary"}`
+                    `flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? "bg-primary text-white" : "text-gray-700 hover:bg-primary/5 hover:text-primary"}`
                   }
                 >
                   <l.icon className="text-base flex-shrink-0" />
@@ -240,28 +234,17 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Dark mode toggle in mobile menu */}
-            <div className="px-3 pb-1">
-              <button
-                onClick={() => setDark((d) => !d)}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary transition-all"
-              >
-                {dark ? <FaSun className="text-base flex-shrink-0 text-yellow-400" /> : <FaMoon className="text-base flex-shrink-0 text-gray-500" />}
-                {dark ? "Light Mode" : "Dark Mode"}
-              </button>
-            </div>
-
             {/* Customer extra links */}
             {user?.role === "customer" && (
-              <div className="px-3 pb-3 flex flex-col gap-1 border-t border-gray-100 dark:border-gray-800 pt-3 mt-1">
+              <div className="px-3 pb-3 flex flex-col gap-1 border-t border-gray-100 pt-3 mt-1">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-3 mb-1">My Account</p>
-                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary transition-all">
+                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:bg-primary/5 hover:text-primary transition-all">
                   <FaUser className="text-base flex-shrink-0 text-primary" /> Profile
                 </Link>
-                <Link to="/my-orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary transition-all">
+                <Link to="/my-orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:bg-primary/5 hover:text-primary transition-all">
                   <FaBox className="text-base flex-shrink-0 text-primary" /> My Orders
                 </Link>
-                <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary transition-all">
+                <Link to="/cart" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:bg-primary/5 hover:text-primary transition-all">
                   <FaShoppingCart className="text-base flex-shrink-0 text-primary" /> Cart {cartCount > 0 && <span className="ml-auto bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">{cartCount > 9 ? "9+" : cartCount}</span>}
                 </Link>
               </div>
@@ -269,8 +252,8 @@ export default function Navbar() {
 
             {/* Admin link */}
             {(user?.role === "owner" || user?.role === "staff") && (
-              <div className="px-3 pb-3 flex flex-col gap-1 border-t border-gray-100 dark:border-gray-800 pt-3 mt-1">
-                <Link to="/admin/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary transition-all">
+              <div className="px-3 pb-3 flex flex-col gap-1 border-t border-gray-100 pt-3 mt-1">
+                <Link to="/admin/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:bg-primary/5 hover:text-primary transition-all">
                   <FaTachometerAlt className="text-base flex-shrink-0 text-primary" /> Admin Dashboard
                 </Link>
               </div>
@@ -278,10 +261,10 @@ export default function Navbar() {
 
             {/* Logout */}
             {user && (
-              <div className="mt-auto px-3 pb-6 border-t border-gray-100 dark:border-gray-800 pt-3">
+              <div className="mt-auto px-3 pb-6 border-t border-gray-100 pt-3">
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-base font-semibold text-red-500 hover:bg-red-50 transition-all"
                 >
                   <FaSignOutAlt className="text-base flex-shrink-0" /> Logout
                 </button>

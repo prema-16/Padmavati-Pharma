@@ -70,7 +70,7 @@ export default function AdminLayout() {
       <div className="flex-1 md:ml-64 flex flex-col">
         <header className="bg-white border-b border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-20">
           <button className="md:hidden p-2 text-gray-600" onClick={() => setSideOpen(true)}><FaBars /></button>
-          <h1 className="font-semibold text-gray-700 text-base hidden md:block">Padmavati Pharma – Admin</h1>
+          <h1 className="font-bold text-gray-800 text-sm sm:text-base">Padmavati Pharma Admin</h1>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm">{user?.name?.charAt(0)}</div>
             <span className="text-sm font-medium hidden sm:inline">{user?.name}</span>

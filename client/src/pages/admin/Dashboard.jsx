@@ -31,7 +31,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-7">
         {[
           { icon: FaBoxOpen, label:"Total Orders", value: stats.totalOrders, color:"bg-blue-100 text-blue-600" },
           { icon: FaRupeeSign, label:"Revenue", value: `₹${(stats.revenue||0).toLocaleString("en-IN",{maximumFractionDigits:0})}`, color:"bg-green-100 text-green-600" },
@@ -88,9 +88,11 @@ export default function Dashboard() {
         <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
           <h3 className="font-bold">Recent Orders</h3>
         </div>
-        <div className="overflow-x-auto">
+        
+        {/* Desktop View Table */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-xs font-bold text-gray-500 uppercase"><tr><th className="px-5 py-3 text-left">Order ID</th><th className="px-5 py-3 text-left">Customer</th><th className="px-5 py-3">Amount</th><th className="px-5 py-3">Status</th><th className="px-5 py-3">Date</th></tr></thead>
+            <thead className="bg-gray-50 text-xs font-bold text-gray-500 uppercase"><tr><th className="px-5 py-3.5 text-left">Order ID</th><th className="px-5 py-3.5 text-left">Customer</th><th className="px-5 py-3.5">Amount</th><th className="px-5 py-3.5">Status</th><th className="px-5 py-3.5">Date</th></tr></thead>
             <tbody>
               {recentOrders?.map(o=>(
                 <tr key={o._id} className="border-t border-gray-50 hover:bg-gray-50">
@@ -103,6 +105,29 @@ export default function Dashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View Cards */}
+        <div className="md:hidden divide-y divide-gray-100">
+          {recentOrders?.map(o => (
+            <div key={o._id} className="p-4 hover:bg-gray-50 flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-gray-900 text-sm">#{o.orderNumber?.split("-").pop() || o._id.toString().slice(-6).toUpperCase()}</span>
+                <span className="text-xs text-gray-400">{new Date(o.createdAt).toLocaleDateString("en-IN")}</span>
+              </div>
+              <div className="text-sm">
+                <p className="font-semibold text-gray-800">{o.user?.companyName || o.user?.name}</p>
+                <p className="text-xs text-gray-400">{o.user?.email}</p>
+              </div>
+              <div className="flex justify-between items-center mt-1">
+                <span className="font-bold text-primary">₹{(o.totalPrice||0).toFixed(2)}</span>
+                <span className={`text-[10px] ${STATUS_COLORS[o.status]||"badge-primary"}`}>{o.status}</span>
+              </div>
+            </div>
+          ))}
+          {(!recentOrders || recentOrders.length === 0) && (
+            <p className="p-5 text-center text-gray-400 text-sm">No recent orders found</p>
+          )}
         </div>
       </div>
     </div>

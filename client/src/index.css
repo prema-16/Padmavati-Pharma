@@ -16,24 +16,6 @@
     @apply text-gray-100;
   }
   .dark p { color: inherit; }
-
-  /* Global dark mode overrides for tailwind utility classes */
-  .dark .bg-white {
-    @apply bg-gray-900;
-  }
-  .dark .border-gray-100 {
-    @apply border-gray-800;
-  }
-  .dark .text-gray-800 {
-    @apply text-gray-100;
-  }
-  .dark .text-gray-700 {
-    @apply text-gray-200;
-  }
-  .dark .text-gray-600 {
-    @apply text-gray-300;
-  }
-
   button, a { min-height: 44px; }
 }
 
@@ -57,7 +39,7 @@
            transition-all;
   }
   .input option {
-    @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100;
+    @apply bg-white text-gray-800;
   }
   .label { @apply block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5; }
 

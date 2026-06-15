@@ -41,26 +41,50 @@ export default function AdminCategories() {
 
       {loading ? <Spinner /> : (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-xs font-bold text-gray-500 uppercase"><tr><th className="px-5 py-3.5 text-left">Name</th><th className="px-5 py-3.5 text-left">Description</th><th className="px-5 py-3.5">Products</th><th className="px-5 py-3.5">Status</th><th className="px-5 py-3.5">Actions</th></tr></thead>
-            <tbody>
-              {categories.map(c=>(
-                <tr key={c._id} className="border-t border-gray-50 hover:bg-gray-50">
-                  <td className="px-5 py-3.5 font-semibold">{c.name}</td>
-                  <td className="px-5 py-3.5 text-gray-500">{c.description||"—"}</td>
-                  <td className="px-5 py-3.5 text-center"><span className="badge-primary">{c.productCount||0}</span></td>
-                  <td className="px-5 py-3.5 text-center"><span className={c.isActive!==false?"badge-success":"bg-gray-100 text-gray-500 text-xs font-bold px-2.5 py-1 rounded-full"}>{c.isActive!==false?"Active":"Inactive"}</span></td>
-                  <td className="px-5 py-3.5">
-                    <div className="flex gap-2">
-                      <button onClick={()=>openEdit(c)} className="w-8 h-8 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center hover:bg-blue-100"><FaEdit className="text-xs" /></button>
-                      <button onClick={()=>handleDelete(c._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {categories.length === 0 && <tr><td colSpan="5" className="text-center py-12 text-gray-400">No categories yet</td></tr>}
-            </tbody>
-          </table>
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 text-xs font-bold text-gray-500 uppercase"><tr><th className="px-5 py-3.5 text-left">Name</th><th className="px-5 py-3.5 text-left">Description</th><th className="px-5 py-3.5">Products</th><th className="px-5 py-3.5">Status</th><th className="px-5 py-3.5">Actions</th></tr></thead>
+              <tbody>
+                {categories.map(c=>(
+                  <tr key={c._id} className="border-t border-gray-50 hover:bg-gray-50">
+                    <td className="px-5 py-3.5 font-semibold">{c.name}</td>
+                    <td className="px-5 py-3.5 text-gray-500">{c.description||"—"}</td>
+                    <td className="px-5 py-3.5 text-center"><span className="badge-primary">{c.productCount||0}</span></td>
+                    <td className="px-5 py-3.5 text-center"><span className={c.isActive!==false?"badge-success":"bg-gray-100 text-gray-500 text-xs font-bold px-2.5 py-1 rounded-full"}>{c.isActive!==false?"Active":"Inactive"}</span></td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex gap-2">
+                        <button onClick={()=>openEdit(c)} className="w-8 h-8 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center hover:bg-blue-100"><FaEdit className="text-xs" /></button>
+                        <button onClick={()=>handleDelete(c._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {categories.length === 0 && <tr><td colSpan="5" className="text-center py-12 text-gray-400">No categories yet</td></tr>}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile View Cards */}
+          <div className="md:hidden divide-y divide-gray-100">
+            {categories.map((c) => (
+              <div key={c._id} className="p-4 hover:bg-gray-50 flex flex-col gap-2.5">
+                <div className="flex justify-between items-center gap-3">
+                  <h4 className="font-semibold text-sm text-gray-950 truncate">{c.name}</h4>
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <button onClick={() => openEdit(c)} className="w-8 h-8 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center hover:bg-blue-100"><FaEdit className="text-xs" /></button>
+                    <button onClick={() => handleDelete(c._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{c.description || "No description provided"}</p>
+                <div className="flex justify-between items-center text-xs mt-1">
+                  <div><span className="text-gray-400">Products:</span> <span className="font-semibold text-primary">{c.productCount || 0} items</span></div>
+                  <div><span className="text-gray-400">Status:</span> <span className={c.isActive !== false ? "text-green-600 font-bold" : "text-gray-400"}>{c.isActive !== false ? "Active" : "Inactive"}</span></div>
+                </div>
+              </div>
+            ))}
+            {categories.length === 0 && <p className="p-5 text-center text-gray-400 text-sm">No categories yet</p>}
+          </div>
         </div>
       )}
 
