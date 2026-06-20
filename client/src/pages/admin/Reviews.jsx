@@ -4,11 +4,13 @@ import { FaCheck, FaTrash, FaStar } from "react-icons/fa";
 import api from "../../services/api";
 import Spinner from "../../components/common/Spinner";
 import toast from "react-hot-toast";
+import ConfirmDialog from "../../components/common/ConfirmDialog";
 
 export default function AdminReviews() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("pending");
+  const [confirm, setConfirm] = useState(null); // review id to delete
 
   const load = () => { setLoading(true); api.get(`/admin/reviews?status=${filter}`).then(r=>setReviews(r.data.reviews)).finally(()=>setLoading(false)); };
   useEffect(() => { load(); }, [filter]);
@@ -18,10 +20,10 @@ export default function AdminReviews() {
     catch (err) { toast.error("Failed"); }
   };
 
-  const del = async (id) => {
-    if (!window.confirm("Delete this review?")) return;
-    try { await api.delete(`/admin/reviews/${id}`); toast.success("Deleted!"); load(); }
+  const del = async () => {
+    try { await api.delete(`/admin/reviews/${confirm}`); toast.success("Deleted!"); load(); }
     catch (err) { toast.error("Failed"); }
+    finally { setConfirm(null); }
   };
 
   return (
@@ -58,7 +60,7 @@ export default function AdminReviews() {
                       <div className="flex gap-2 justify-center">
                         {!r.isApproved && <button onClick={()=>approve(r._id)} className="w-8 h-8 bg-green-50 text-green-600 rounded-lg flex items-center justify-center hover:bg-green-100"><FaCheck className="text-xs" /></button>}
                         {r.isApproved && <span className="badge-success text-xs">Approved</span>}
-                        <button onClick={()=>del(r._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>
+                        <button onClick={()=>setConfirm(r._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>
                       </div>
                     </td>
                   </tr>
@@ -81,7 +83,7 @@ export default function AdminReviews() {
                     {!r.isApproved && (
                       <button onClick={() => approve(r._id)} className="w-8 h-8 bg-green-50 text-green-600 rounded-lg flex items-center justify-center hover:bg-green-100"><FaCheck className="text-xs" /></button>
                     )}
-                    <button onClick={() => del(r._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>
+                    <button onClick={() => setConfirm(r._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>
                   </div>
                 </div>
                 <div className="text-xs">
@@ -100,6 +102,15 @@ export default function AdminReviews() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!confirm}
+        title="Delete Review?"
+        message="This will permanently remove the review and cannot be undone."
+        confirmText="Yes, Delete"
+        onConfirm={del}
+        onCancel={() => setConfirm(null)}
+      />
     </div>
   );
 }

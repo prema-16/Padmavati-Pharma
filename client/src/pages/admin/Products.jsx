@@ -6,6 +6,7 @@ import api from "../../services/api";
 import Spinner from "../../components/common/Spinner";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import ConfirmDialog from "../../components/common/ConfirmDialog";
 
 export default function AdminProducts() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function AdminProducts() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [confirm, setConfirm] = useState(null); // product id to delete
 
   const load = () => {
     setLoading(true);
@@ -25,10 +27,10 @@ export default function AdminProducts() {
 
   useEffect(() => { load(); }, [page]);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this product permanently?")) return;
-    try { await api.delete(`/products/${id}`); toast.success("Product deleted"); load(); }
+  const handleDelete = async () => {
+    try { await api.delete(`/products/${confirm}`); toast.success("Product deleted"); load(); }
     catch (err) { toast.error(err.response?.data?.message || "Failed"); }
+    finally { setConfirm(null); }
   };
 
   return (
@@ -66,7 +68,7 @@ export default function AdminProducts() {
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
                         <button onClick={() => navigate(`/admin/products/edit/${p._id}`)} className="w-8 h-8 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center hover:bg-blue-100"><FaEdit className="text-xs" /></button>
-                        {user?.role === "owner" && <button onClick={() => handleDelete(p._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>}
+                        {user?.role === "owner" && <button onClick={() => setConfirm(p._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>}
                       </div>
                     </td>
                   </tr>
@@ -91,7 +93,7 @@ export default function AdminProducts() {
                   </div>
                   <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button onClick={() => navigate(`/admin/products/edit/${p._id}`)} className="w-8 h-8 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center hover:bg-blue-100"><FaEdit className="text-xs" /></button>
-                    {user?.role === "owner" && <button onClick={() => handleDelete(p._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>}
+                    {user?.role === "owner" && <button onClick={() => setConfirm(p._id)} className="w-8 h-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center hover:bg-red-100"><FaTrash className="text-xs" /></button>}
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
@@ -119,6 +121,15 @@ export default function AdminProducts() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!confirm}
+        title="Delete Product?"
+        message="This will permanently delete the product and cannot be undone."
+        confirmText="Yes, Delete"
+        onConfirm={handleDelete}
+        onCancel={() => setConfirm(null)}
+      />
     </div>
   );
 }
