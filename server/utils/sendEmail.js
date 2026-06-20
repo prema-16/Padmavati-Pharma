@@ -18,6 +18,8 @@ const sendEmail = async ({ to, subject, html }) => {
     greetingTimeout: 10000,
   });
 
+  console.log(`[SMTP] Attempting email send. Host: ${transporter.options.host}, Port: ${transporter.options.port}, Secure: ${transporter.options.secure}, User: ${transporter.options.auth.user}`);
+
   const info = await transporter.sendMail({
     from: `"${process.env.APP_NAME || "Padmavati Pharma"}" <${process.env.EMAIL_USER}>`,
     to,

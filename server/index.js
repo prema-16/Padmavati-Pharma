@@ -17,6 +17,9 @@ const errorHandler = require("./middleware/error");
 
 const app = express();
 
+// Trust proxy for Render / Cloudflare
+app.set("trust proxy", 1);
+
 // Connect DB
 connectDB();
 
