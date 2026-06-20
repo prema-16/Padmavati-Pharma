@@ -76,33 +76,6 @@ app.get("/", (req, res) => res.json({
 // Health check
 app.get("/api/health", (req, res) => res.json({ success: true, message: "Padmavati Pharma API running ✅" }));
 
-// Email debug health check
-app.get("/api/health-email", async (req, res) => {
-  try {
-    const sendEmail = require("./utils/sendEmail");
-    await sendEmail({
-      to: "premanandlondhe16@gmail.com",
-      subject: "SMTP Debug Test",
-      html: "<p>If you see this, email sending works!</p>"
-    });
-    res.json({ success: true, message: "Test email sent successfully!" });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      errorName: err.name,
-      errorMessage: err.message,
-      errorStack: err.stack,
-      envUsed: {
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        user: process.env.EMAIL_USER,
-        passLength: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.length : 0,
-        passNoSpacesLength: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s+/g, "").length : 0,
-      }
-    });
-  }
-});
-
 // 404
 app.use((req, res) => res.status(404).json({ success: false, message: "Route not found" }));
 
